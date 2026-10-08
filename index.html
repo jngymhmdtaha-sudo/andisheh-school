@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>هنرستان اندیشه | Andisheh School</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== ذرات شناور ===== -->
+  <canvas id="particles"></canvas>
+
+  <!-- ===== نوار بالا ===== -->
+  <nav class="navbar">
+    <div class="logo">
+      <span class="logo-icon">🏛️</span>
+      <span class="logo-text">هنرستان اندیشه</span>
+    </div>
+    <div class="nav-icons">
+      <a href="#" title="کانال تلگرام">📱</a>
+      <a href="#" title="اینستاگرام">📷</a>
+      <a href="tel:02112345678" title="تماس">📞</a>
+    </div>
+  </nav>
+
+  <!-- ===== بخش Hero ===== -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    
+    <div class="hero-content">
+      <div class="hero-badge">✦ خوش آمدید ✦</div>
+      <h1 class="hero-title">
+        <span class="line">هنرستان</span>
+        <span class="line gradient">اندیشه</span>
+      </h1>
+      <p class="hero-subtitle">با مدیریت آقای حسین رنجبر</p>
+      <a href="#about" class="hero-btn">
+        <span>کشف کنید</span>
+        <span class="arrow">↓</span>
+      </a>
+    </div>
+
+    <div class="scroll-indicator">
+      <div class="mouse">
+        <div class="wheel"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== بخش درباره ===== -->
+  <section class="section" id="about">
+    <div class="section-bg"></div>
+    <div class="section-container">
+      <div class="section-header reveal">
+        <span class="section-number">۰۱</span>
+        <h2>درباره هنرستان</h2>
+        <div class="title-line"></div>
+      </div>
+      <p class="section-text reveal">
+        هنرستان اندیشه با هدف پرورش نسل آینده در زمینه‌های فنی و حرفه‌ای، 
+        محیطی امن، پویا و پیشرفته برای یادگیری فراهم کرده است. 
+        اساتید مجرب، کارگاه‌های تخصصی و فضای آموزشی مدرن، 
+        ما را به یکی از بهترین هنرستان‌های منطقه تبدیل کرده است.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== بخش امکانات ===== -->
+  <section class="section">
+    <div class="section-bg"></div>
+    <div class="section-container">
+      <div class="section-header reveal">
+        <span class="section-number">۰۲</span>
+        <h2>امکانات ما</h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">🖥️</div>
+          <h3>کارگاه کامپیوتر</h3>
+          <p>سیستم‌های به‌روز و مجهز</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">🔬</div>
+          <h3>آزمایشگاه</h3>
+          <p>تجهیزات پیشرفته علمی</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">📚</div>
+          <h3>کتابخانه</h3>
+          <p>منابع غنی آموزشی</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">⚽</div>
+          <h3>سالن ورزشی</h3>
+          <p>فضای ورزشی سرپوشیده</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== بخش ورود ===== -->
+  <section class="section" id="login-section">
+    <div class="section-bg"></div>
+    <div class="section-container">
+      <div class="section-header reveal">
+        <span class="section-number">۰۳</span>
+        <h2>ورود به سیستم</h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="login-buttons reveal">
+        <button onclick="openLogin('teacher')" class="btn-glow">
+          <span class="btn-icon">👨‍🏫</span>
+          <span>ورود معلم</span>
+        </button>
+        <button onclick="openLogin('student')" class="btn-glow">
+          <span class="btn-icon">👨‍🎓</span>
+          <span>ورود دانش‌آموز</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== پنل معلم ===== -->
+  <div id="teacherPanel" class="dashboard" style="display: none;">
+    <div class="dashboard-content">
+      <h2>✏️ ایجاد تکلیف جدید</h2>
+      <div class="form-row">
+        <select id="classSelect">
+          <option value="computer1">کامپیوتر ۱</option>
+          <option value="computer2">کامپیوتر ۲</option>
+        </select>
+        <select id="gradeSelect">
+          <option value="10">پایه ۱۰</option>
+          <option value="12">پایه ۱۲</option>
+        </select>
+        <select id="subjectSelect">
+          <option value="math">ریاضی</option>
+          <option value="physics">فیزیک</option>
+          <option value="programming">برنامه‌نویسی</option>
+        </select>
+      </div>
+      <textarea id="assignmentText" placeholder="متن تکلیف را اینجا بنویسید..."></textarea>
+      <div class="form-actions">
+        <button onclick="createAssignment()" class="btn-glow">📤 انتشار تکلیف</button>
+        <button onclick="logout()" class="btn-outline">🚪 خروج</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== لیست تکالیف ===== -->
+  <div id="assignmentsSection" class="assignments" style="display: none;">
+    <h2>📚 تکالیف</h2>
+    <div id="assignmentsList"></div>
+    <button onclick="logout()" class="btn-outline">🚪 خروج</button>
+  </div>
+
+  <!-- ===== بخش تماس ===== -->
+  <section class="section">
+    <div class="section-bg"></div>
+    <div class="section-container">
+      <div class="section-header reveal">
+        <span class="section-number">۰۴</span>
+        <h2>تماس با ما</h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card reveal">
+          <div class="contact-icon">📍</div>
+          <span>تهران، منطقه ۲۲، شهرک راه‌آهن</span>
+        </div>
+        <div class="contact-card reveal">
+          <div class="contact-icon">📞</div>
+          <span>۰۲۱-۱۲۳۴۵۶۷۸</span>
+        </div>
+        <div class="contact-card reveal">
+          <div class="contact-icon">✉️</div>
+          <span>info@andisheh-school.ir</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== فوتر ===== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-logo">🏛️ هنرستان اندیشه</div>
+      <p class="creator">✨ ساخته شده توسط <span>Taha Jangy</span></p>
+      <p class="collab">برای همکاری و طراحی سایت:</p>
+      <a href="https://t.me/tahazip" class="telegram-link">@tahazip</a>
+    </div>
+  </footer>
+
+  <!-- ===== مودال ورود ===== -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeLogin()">&times;</span>
+      <div class="modal-icon">🔐</div>
+      <h2 id="loginTitle">ورود</h2>
+      <input type="text" id="loginUsername" placeholder="نام کاربری">
+      <input type="password" id="loginPassword" placeholder="رمز عبور">
+      <button onclick="doLogin()" class="btn-glow btn-full">ورود به سیستم</button>
+      <p class="hint">راهنما: معلم → teacher1 / 1234 | دانش‌آموز → student1 / 1234</p>
+    </div>
+  </div>
+
+  <!-- ===== دکمه برنامه هفتگی ===== -->
+  <button id="scheduleBtn" class="schedule-fab" aria-label="برنامه هفتگی">
+    <span class="halo"></span>
+    <span class="halo halo-2"></span>
+    <span class="halo halo-3"></span>
+    <span class="fab-content">
+      <span class="fab-icon">📅</span>
+      <span class="fab-text">برنامه هفتگی</span>
+    </span>
+  </button>
+
+  <!-- ===== مودال برنامه هفتگی ===== -->
+  <div id="scheduleModal" class="schedule-modal">
+    <div class="schedule-panel">
+      <div class="schedule-header">
+        <h2>📅 برنامه هفتگی</h2>
+        <button class="schedule-close" onclick="closeSchedule()">&times;</button>
+      </div>
+      <div class="schedule-body">
+        <img src="schedule.png" alt="برنامه هفتگی" class="schedule-image" onerror="this.style.display='none'; document.getElementById('scheduleFallback').style.display='block';">
+        <p id="scheduleFallback" class="schedule-placeholder" style="display:none;">
+          برنامه هفتگی کلاس‌ها به‌زودی در اینجا نمایش داده می‌شود.
+          <br><br>
+          <small>منتظر ارسال اطلاعات از مدیریت مدرسه هستیم.</small>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== اسکریپت‌ها (آخر همه) ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
