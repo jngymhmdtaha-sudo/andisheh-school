@@ -82,6 +82,8 @@ async function logout() {
   await sb.auth.signOut();
   currentUser = null;
   document.getElementById('teacherPanel').style.display = 'none';
+  const adminPanel = document.getElementById('adminPanel');
+  if (adminPanel) adminPanel.style.display = 'none';
   document.getElementById('assignmentsSection').style.display = 'none';
   document.getElementById('login-section').style.display = 'flex';
 }
@@ -728,4 +730,191 @@ window.addEventListener('load', () => {
       });
     });
   }, 2300); // بعد از Preloader
+});
+// ============================================
+// 📢 سیستم اعلان‌ها
+// ============================================
+
+const ANNOUNCEMENT_ICONS = {
+  info: '📢',
+  success: '✅',
+  warning: '⚠️',
+  danger: '🚨',
+  urgent: '🔥',
+};
+
+// ===== نمایش نوار اعلان =====
+async function loadAndShowAnnouncements() {
+  const banner = document.getElementById('announcementBanner');
+  if (!banner) return;
+
+  // اگه کاربر قبلاً بسته باشه، نشون نده
+  const closedId = localStorage.getItem('closedAnnouncement');
+  
+  const { data, error } = await sb
+    .from('announcements')
+    .select('*')
+    .eq('active', true)
+    .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  if (error || !data || data.length === 0) return;
+
+  const ann = data[0];
+  
+  // اگه کاربر این اعلان رو بسته، نشون نده
+  if (closedId === String(ann.id)) return;
+
+  document.getElementById('announcementIcon').textContent =
+    ANNOUNCEMENT_ICONS[ann.type] || '📢';
+  document.getElementById('announcementTitle').textContent = ann.title;
+  document.getElementById('announcementBody').textContent = ann.body || '';
+
+  banner.className = `announcement-banner type-${ann.type || 'info'}`;
+  banner.dataset.id = ann.id;
+  banner.style.display = 'flex';
+}
+
+function closeAnnouncement() {
+  const banner = document.getElementById('announcementBanner');
+  if (banner.dataset.id) {
+    localStorage.setItem('closedAnnouncement', banner.dataset.id);
+  }
+  banner.style.display = 'none';
+}
+
+// ===== بارگذاری اعلان‌های پنل مدیر =====
+async function loadAdminAnnouncements() {
+  const container = document.getElementById('adminAnnouncementsList');
+  if (!container) return;
+
+  const { data, error } = await sb
+    .from('announcements')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    container.innerHTML = '<p style="color:#ff6666;">خطا در بارگذاری</p>';
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    container.innerHTML = '<p style="color:#a0a0b8;text-align:center;">📭 هیچ اعلانی ثبت نشده.</p>';
+    return;
+  }
+
+  container.innerHTML = data.map((ann) => {
+    const isExpired = ann.expires_at && new Date(ann.expires_at) < new Date();
+    const expiryText = ann.expires_at
+      ? `📅 انقضا: ${new Date(ann.expires_at).toLocaleDateString('fa-IR')}`
+      : '📅 بدون انقضا';
+    
+    return `
+      <div class="admin-announcement-item" style="${isExpired ? 'opacity:0.5;' : ''}">
+        <div class="ann-content">
+          <h4>${ANNOUNCEMENT_ICONS[ann.type] || '📢'} ${ann.title}</h4>
+          <p>${ann.body || ''}</p>
+          <div class="ann-meta">
+            ${expiryText}
+            ${isExpired ? ' • ⚠️ منقضی شده' : ' • ✅ فعال'}
+          </div>
+        </div>
+        <button class="ann-delete-btn" onclick="deleteAnnouncement(${ann.id})">🗑️ حذف</button>
+      </div>
+    `;
+  }).join('');
+}
+
+// ===== ساخت اعلان جدید =====
+async function createAnnouncement() {
+  if (!currentUser || currentUser.role !== 'admin') return;
+
+  const title = document.getElementById('announcementTitleInput').value.trim();
+  const body = document.getElementById('announcementBodyInput').value.trim();
+  const type = document.getElementById('announcementType').value;
+  const expiryDays = parseInt(document.getElementById('announcementExpiry').value);
+
+  if (!title) {
+    alert('❌ عنوان اعلان رو وارد کن!');
+    return;
+  }
+
+  if (title.length > 100) {
+    alert('❌ عنوان خیلی طولانیه! (حداکثر ۱۰۰ کاراکتر)');
+    return;
+  }
+
+  let expiresAt = null;
+  if (expiryDays > 0) {
+    expiresAt = new Date(Date.now() + expiryDays * 24 * 60 * 60 * 1000).toISOString();
+  }
+
+  const { error } = await sb.from('announcements').insert({
+    title: sanitizeInput(title),
+    body: sanitizeInput(body),
+    type: type,
+    expires_at: expiresAt,
+    active: true,
+    created_by: currentUser.id,
+  });
+
+  if (error) {
+    alert('❌ خطا: ' + error.message);
+    return;
+  }
+
+  await logActivity('announcement_created', `عنوان: ${title}`);
+
+  document.getElementById('announcementTitleInput').value = '';
+  document.getElementById('announcementBodyInput').value = '';
+  alert('✅ اعلان منتشر شد!');
+  
+  await loadAdminAnnouncements();
+  await loadAndShowAnnouncements();
+  await loadAdminStats();
+}
+
+// ===== حذف اعلان =====
+async function deleteAnnouncement(id) {
+  if (!confirm('مطمئنی می‌خوای این اعلان رو حذف کنی؟')) return;
+
+  const { error } = await sb.from('announcements').delete().eq('id', id);
+
+  if (error) {
+    alert('❌ خطا: ' + error.message);
+    return;
+  }
+
+  await logActivity('announcement_deleted', `ID: ${id}`);
+  alert('✅ اعلان حذف شد!');
+  
+  await loadAdminAnnouncements();
+  await loadAdminStats();
+}
+
+// ===== بارگذاری آمار پنل مدیر =====
+async function loadAdminStats() {
+  const [students, teachers, assignments, announcements] = await Promise.all([
+    sb.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
+    sb.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'teacher'),
+    sb.from('assignments').select('*', { count: 'exact', head: true }),
+    sb.from('announcements').select('*', { count: 'exact', head: true }).eq('active', true),
+  ]);
+
+  const setNum = (id, n) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = toPersianNumber(n || 0);
+  };
+
+  setNum('statStudents', students.count);
+  setNum('statTeachers', teachers.count);
+  setNum('statAssignments', assignments.count);
+  setNum('statAnnouncements', announcements.count);
+}
+// ===== بارگذاری اعلان‌ها موقع باز شدن سایت =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    loadAndShowAnnouncements();
+  }, 3000); // بعد از Preloader
 });

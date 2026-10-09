@@ -26,23 +26,30 @@
   <canvas id="particles"></canvas>
 
   <!-- ===== نوار بالا ===== -->
-<nav class="navbar">
-  <div class="logo">
-    <span class="logo-icon">🏛️</span>
-    <span class="logo-text">هنرستان اندیشه</span>
+  <nav class="navbar">
+    <div class="logo">
+      <span class="logo-icon">🏛️</span>
+      <span class="logo-text">هنرستان اندیشه</span>
+    </div>
+    <div class="nav-icons">
+      <a href="#" title="کانال تلگرام">📱</a>
+      <a href="#" title="اینستاگرام">📷</a>
+      <a href="tel:44104466" title="تماس">📞</a>
+      <button id="themeToggle" class="theme-toggle" aria-label="تغییر تم">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+    <!-- ===== نوار اعلان ===== -->
+  <div id="announcementBanner" class="announcement-banner" style="display: none;">
+    <span class="announcement-icon" id="announcementIcon">📢</span>
+    <div class="announcement-content">
+      <strong id="announcementTitle"></strong>
+      <p id="announcementBody"></p>
+    </div>
+    <button class="announcement-close" onclick="closeAnnouncement()">&times;</button>
   </div>
-  <div class="nav-icons">
-    <a href="#" title="کانال تلگرام">📱</a>
-    <a href="#" title="اینستاگرام">📷</a>
-    <a href="tel:44104466" title="تماس">📞</a>
-    <button id="themeToggle" class="theme-toggle" aria-label="تغییر تم">
-      <span class="theme-icon">🌙</span>
-    </button>
-  </div>
-</nav>
-  <button id="themeToggle" class="theme-toggle" aria-label="تغییر تم">
-  <span class="theme-icon">🌙</span>
-</button>
 
   <!-- ===== بخش Hero ===== -->
   <section class="hero">
@@ -143,25 +150,20 @@
 </section>
 
   <!-- ===== بخش ورود ===== -->
-  <section class="section" id="login-section">
-    <div class="section-bg"></div>
-    <div class="section-container">
-      <div class="section-header reveal">
-        <span class="section-number">۰۳</span>
-        <h2>ورود به سیستم</h2>
-        <div class="title-line"></div>
-      </div>
-      <div class="login-buttons reveal">
-        <button onclick="openLogin('teacher')" class="btn-glow">
-          <span class="btn-icon">👨‍🏫</span>
-          <span>ورود معلم</span>
-        </button>
-        <button onclick="openLogin('student')" class="btn-glow">
-          <span class="btn-icon">👨‍🎓</span>
-          <span>ورود دانش‌آموز</span>
-        </button>
-      </div>
-    </div>
+  <div class="login-buttons reveal">
+  <button onclick="openLogin('teacher')" class="btn-glow">
+    <span class="btn-icon">👨‍🏫</span>
+    <span>ورود معلم</span>
+  </button>
+  <button onclick="openLogin('student')" class="btn-glow">
+    <span class="btn-icon">👨‍🎓</span>
+    <span>ورود دانش‌آموز</span>
+  </button>
+  <button onclick="openLogin('manager')" class="btn-glow btn-manager">
+    <span class="btn-icon">👔</span>
+    <span>ورود مدیر</span>
+  </button>
+</div>
   </section>
 
   <!-- ===== پنل معلم ===== -->
@@ -190,6 +192,70 @@
       </div>
     </div>
   </div>
+
+<!-- ===== پنل مدیر ===== -->
+<div id="adminPanel" class="dashboard admin-panel" style="display: none;">
+  <div class="dashboard-content">
+    <h2>👔 پنل مدیریت مدرسه</h2>
+    <p class="welcome-msg">خوش آمدید، <span id="adminName"></span></p>
+
+    <!-- آمار -->
+    <div class="admin-stats">
+      <div class="admin-stat">
+        <span class="stat-icon">👨‍🎓</span>
+        <span class="stat-value" id="statStudents">۰</span>
+        <span class="stat-label">دانش‌آموز</span>
+      </div>
+      <div class="admin-stat">
+        <span class="stat-icon">👨‍🏫</span>
+        <span class="stat-value" id="statTeachers">۰</span>
+        <span class="stat-label">معلم</span>
+      </div>
+      <div class="admin-stat">
+        <span class="stat-icon">📚</span>
+        <span class="stat-value" id="statAssignments">۰</span>
+        <span class="stat-label">تکلیف</span>
+      </div>
+      <div class="admin-stat">
+        <span class="stat-icon">📢</span>
+        <span class="stat-value" id="statAnnouncements">۰</span>
+        <span class="stat-label">اعلان</span>
+      </div>
+    </div>
+
+    <!-- فرم اعلان جدید -->
+    <div class="admin-section">
+      <h3>📢 ثبت اعلان جدید</h3>
+      <input type="text" id="announcementTitleInput" placeholder="عنوان اعلان (مثلاً: فردا تعطیل است)" maxlength="100">
+      <textarea id="announcementBodyInput" placeholder="متن کامل اعلان..." maxlength="500"></textarea>
+      <div class="form-row">
+        <select id="announcementType">
+          <option value="info">ℹ️ اطلاعاتی</option>
+          <option value="success">✅ موفقیت</option>
+          <option value="warning">⚠️ هشدار</option>
+          <option value="danger">🚨 مهم</option>
+          <option value="urgent">🔥 فوری</option>
+        </select>
+        <select id="announcementExpiry">
+          <option value="1">۱ روز</option>
+          <option value="3">۳ روز</option>
+          <option value="7" selected>۱ هفته</option>
+          <option value="30">۱ ماه</option>
+          <option value="0">بدون انقضا</option>
+        </select>
+      </div>
+      <button onclick="createAnnouncement()" class="btn-glow">📤 انتشار اعلان</button>
+    </div>
+
+    <!-- لیست اعلان‌های فعال -->
+    <div class="admin-section">
+      <h3>📋 اعلان‌های فعال</h3>
+      <div id="adminAnnouncementsList"></div>
+    </div>
+
+    <button onclick="logout()" class="btn-outline">🚪 خروج</button>
+  </div>
+</div>
 
   <!-- ===== لیست تکالیف ===== -->
   <div id="assignmentsSection" class="assignments" style="display: none;">

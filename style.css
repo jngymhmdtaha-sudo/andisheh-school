@@ -2024,3 +2024,397 @@ body.light-theme .hint {
 body.light-theme .section-number {
   color: #b8941f;
 }
+/* ============================================
+   📢 سیستم اعلان‌ها
+   ============================================ */
+
+/* نوار اعلان */
+.announcement-banner {
+  position: fixed;
+  top: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  border-radius: 15px;
+  z-index: 999;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid;
+}
+
+@keyframes slideDown {
+  from { transform: translate(-50%, -100px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.announcement-banner.type-info {
+  background: linear-gradient(135deg, rgba(0, 150, 255, 0.95), rgba(0, 212, 255, 0.9));
+  border-color: #00d4ff;
+  color: #fff;
+}
+
+.announcement-banner.type-success {
+  background: linear-gradient(135deg, rgba(40, 200, 100, 0.95), rgba(80, 220, 120, 0.9));
+  border-color: #50dc78;
+  color: #fff;
+}
+
+.announcement-banner.type-warning {
+  background: linear-gradient(135deg, rgba(255, 180, 0, 0.95), rgba(255, 210, 50, 0.9));
+  border-color: #ffd232;
+  color: #1a1a2e;
+}
+
+.announcement-banner.type-danger {
+  background: linear-gradient(135deg, rgba(220, 50, 50, 0.95), rgba(255, 80, 80, 0.9));
+  border-color: #ff5050;
+  color: #fff;
+}
+
+.announcement-banner.type-urgent {
+  background: linear-gradient(135deg, rgba(180, 40, 180, 0.95), rgba(220, 80, 220, 0.9));
+  border-color: #dc50dc;
+  color: #fff;
+  animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1), pulseUrgent 2s infinite;
+}
+
+@keyframes pulseUrgent {
+  0%, 100% { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); }
+  50% { box-shadow: 0 15px 50px rgba(220, 80, 220, 0.7); }
+}
+
+.announcement-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.announcement-content {
+  flex: 1;
+}
+
+.announcement-content strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 3px;
+  font-weight: 700;
+}
+
+.announcement-content p {
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+.announcement-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  color: inherit;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1;
+}
+
+.announcement-close:hover {
+  background: rgba(0, 0, 0, 0.4);
+  transform: rotate(90deg);
+}
+
+/* ============================================
+   👔 پنل مدیر
+   ============================================ */
+
+.btn-manager {
+  border-color: #7b2ff7;
+  color: #7b2ff7;
+  background: rgba(123, 47, 247, 0.1);
+}
+
+.btn-manager:hover {
+  background: #7b2ff7;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(123, 47, 247, 0.5);
+}
+
+.admin-panel {
+  max-width: 1100px;
+  padding: 60px 30px;
+}
+
+.admin-panel h2 {
+  font-size: 38px;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #d4af37, #7b2ff7, #00d4ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientFlow 4s linear infinite;
+}
+
+.welcome-msg {
+  text-align: center;
+  color: #a0a0b8;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.welcome-msg span {
+  color: #d4af37;
+  font-weight: 700;
+}
+
+/* آمار */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.admin-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 15px;
+  background: rgba(15, 23, 48, 0.5);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 18px;
+  transition: all 0.4s;
+}
+
+.admin-stat:hover {
+  transform: translateY(-8px);
+  border-color: #ffd700;
+  box-shadow: 0 20px 50px rgba(212, 175, 55, 0.25);
+}
+
+.stat-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #d4af37, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #a0a0b8;
+  margin-top: 5px;
+}
+
+/* بخش‌های پنل */
+.admin-section {
+  background: rgba(15, 23, 48, 0.4);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 25px;
+  text-align: right;
+}
+
+.admin-section h3 {
+  color: #d4af37;
+  font-size: 22px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.admin-section input,
+.admin-section textarea,
+.admin-section select {
+  width: 100%;
+  padding: 14px 18px;
+  margin: 8px 0;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  font-size: 15px;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.admin-section input:focus,
+.admin-section textarea:focus,
+.admin-section select:focus {
+  outline: none;
+  border-color: #d4af37;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.admin-section textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.admin-section .form-row {
+  display: flex;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.admin-section .form-row select {
+  flex: 1;
+  margin: 0;
+}
+
+/* لیست اعلان‌های مدیر */
+.admin-announcement-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-right: 4px solid #d4af37;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+}
+
+.admin-announcement-item:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.admin-announcement-item .ann-content {
+  flex: 1;
+}
+
+.admin-announcement-item h4 {
+  color: #00d4ff;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+
+.admin-announcement-item p {
+  color: #c0c0d0;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 8px 0;
+}
+
+.admin-announcement-item .ann-meta {
+  color: #888;
+  font-size: 12px;
+}
+
+.ann-delete-btn {
+  padding: 8px 14px;
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff6666;
+  border: 1px solid #ff6666;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ann-delete-btn:hover {
+  background: #ff6666;
+  color: #fff;
+}
+
+/* تم روشن - اعلان‌ها */
+body.light-theme .announcement-banner.type-warning {
+  color: #1a1a2e;
+}
+
+body.light-theme .admin-stat,
+body.light-theme .admin-section {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+body.light-theme .admin-section input,
+body.light-theme .admin-section textarea,
+body.light-theme .admin-section select {
+  background: rgba(245, 245, 250, 0.9);
+  color: #1a1a2e;
+}
+
+body.light-theme .admin-announcement-item {
+  background: rgba(245, 245, 250, 0.8);
+}
+
+body.light-theme .admin-announcement-item p {
+  color: #4a4a5a;
+}
+
+/* ریسپانسیو */
+@media (max-width: 768px) {
+  .announcement-banner {
+    top: 70px;
+    width: 95%;
+    padding: 12px 15px;
+    gap: 10px;
+  }
+
+  .announcement-icon {
+    font-size: 22px;
+  }
+
+  .announcement-content strong {
+    font-size: 14px;
+  }
+
+  .announcement-content p {
+    font-size: 12px;
+  }
+
+  .admin-panel {
+    padding: 40px 15px;
+  }
+
+  .admin-panel h2 {
+    font-size: 26px;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-section {
+    padding: 20px 15px;
+  }
+
+  .admin-section .form-row {
+    flex-direction: column;
+  }
+
+  .admin-announcement-item {
+    flex-direction: column;
+  }
+}
