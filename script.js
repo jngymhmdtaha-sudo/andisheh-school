@@ -67,13 +67,33 @@ async function doLogin() {
 
 // ===== داشبورد =====
 async function showDashboard() {
-  document.getElementById('login-section').style.display = 'none';
+  // مخفی کردن بخش ورود (اگه وجود داشت)
+  const loginSection = document.getElementById('login-section');
+  if (loginSection) loginSection.style.display = 'none';
 
+  // نمایش پنل بر اساس نقش
   if (currentUser.role === 'teacher') {
-    document.getElementById('teacherPanel').style.display = 'block';
+    const tp = document.getElementById('teacherPanel');
+    if (tp) tp.style.display = 'block';
+  } else if (currentUser.role === 'admin') {
+    const ap = document.getElementById('adminPanel');
+    if (ap) ap.style.display = 'block';
+    const nameEl = document.getElementById('adminName');
+    if (nameEl) nameEl.textContent = currentUser.full_name || 'مدیر';
+    
+    await loadAdminAnnouncements();
+    await loadAdminStats();
   }
 
-  document.getElementById('assignmentsSection').style.display = 'block';
+  // نمایش لیست تکالیف
+  const as = document.getElementById('assignmentsSection');
+  if (as) as.style.display = 'block';
+  
+  await loadAssignments();
+}
+
+  const as = document.getElementById('assignmentsSection');
+  if (as) as.style.display = 'block';
   await loadAssignments();
 }
 
