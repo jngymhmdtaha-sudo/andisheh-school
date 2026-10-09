@@ -1541,12 +1541,20 @@ body.modal-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.8s, visibility 0.8s;
+  /* این خط: بعد از ۲.۵ ثانیه خودکار مخفی می‌شه */
+  animation: hidePreloader 0.8s 2.5s forwards;
+}
+
+@keyframes hidePreloader {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
 }
 
 #preloader.hidden {
-  opacity: 0;
-  visibility: hidden;
+  display: none;
 }
 
 .preloader-content {

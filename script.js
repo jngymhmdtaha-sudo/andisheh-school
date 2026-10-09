@@ -67,6 +67,26 @@ async function doLogin() {
 
 // ===== داشبورد =====
 async function showDashboard() {
+  // چک کن login-section وجود داره، بعد مخفی کن
+  const loginSection = document.getElementById('login-section');
+  if (loginSection) loginSection.style.display = 'none';
+
+  if (currentUser.role === 'teacher') {
+    const tp = document.getElementById('teacherPanel');
+    if (tp) tp.style.display = 'block';
+  } else if (currentUser.role === 'admin') {
+    const ap = document.getElementById('adminPanel');
+    if (ap) ap.style.display = 'block';
+    const nameEl = document.getElementById('adminName');
+    if (nameEl) nameEl.textContent = currentUser.full_name || 'مدیر';
+    await loadAdminAnnouncements();
+    await loadAdminStats();
+  }
+
+  const as = document.getElementById('assignmentsSection');
+  if (as) as.style.display = 'block';
+  await loadAssignments();
+}
   // مخفی کردن بخش ورود (اگه وجود داشت)
   const loginSection = document.getElementById('login-section');
   if (loginSection) loginSection.style.display = 'none';
