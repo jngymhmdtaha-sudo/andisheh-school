@@ -80,17 +80,19 @@
       <div class="title-line"></div>
     </div>
     <div class="features-grid">
-      <div class="feature-card reveal">
-        <div class="feature-icon">🖥️</div>
-        <h3>کارگاه کامپیوتر</h3>
-        <p>سیستم‌های به‌روز و مجهز</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon">🔬</div>
-        <h3>آزمایشگاه</h3>
-        <p>تجهیزات پیشرفته علمی</p>
-      </div>
-    </div>
+  <div class="feature-card reveal" onclick="openWorkshop('computer')">
+    <div class="feature-icon">🖥️</div>
+    <h3>کارگاه کامپیوتر</h3>
+    <p>سیستم‌های به‌روز و مجهز</p>
+    <span class="card-hint">برای مشاهده کلیک کنید →</span>
+  </div>
+  <div class="feature-card reveal" onclick="openWorkshop('mechanic')">
+    <div class="feature-icon">🔧</div>
+    <h3>کارگاه مکانیک</h3>
+    <p>تجهیزات حرفه‌ای و کامل</p>
+    <span class="card-hint">برای مشاهده کلیک کنید →</span>
+  </div>
+</div>
   </div>
 </section>
 
@@ -231,6 +233,46 @@
   <!-- ===== اسکریپت‌ها (آخر همه) ===== -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
+
+<!-- ===== مودال کارگاه ===== -->
+<div id="workshopModal" class="workshop-modal">
+  <div class="workshop-content">
+    <button class="workshop-close" onclick="closeWorkshop()">&times;</button>
+
+    <!-- بخش Hero کارگاه -->
+    <div class="workshop-hero">
+      <div class="workshop-hero-bg"></div>
+      <div class="workshop-hero-overlay"></div>
+      <div class="workshop-hero-content">
+        <h1 id="workshopTitle">کارگاه کامپیوتر ما</h1>
+        <div class="workshop-arrow-down">↓</div>
+      </div>
+    </div>
+
+    <!-- متن توضیحات -->
+    <div class="workshop-text-section">
+      <p id="workshopText" class="workshop-description"></p>
+    </div>
+
+    <!-- بخش رسانه: ۳ عکس + ویدیو -->
+    <div class="workshop-media">
+      <h2 class="workshop-media-title">گالری تصاویر و ویدیو</h2>
+      <div class="workshop-gallery" id="workshopGallery"></div>
+      <div class="workshop-video-wrapper">
+        <video id="workshopVideo" controls playsinline>
+          <source id="workshopVideoSource" src="" type="video/mp4">
+          مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
+        </video>
+      </div>
+    </div>
+
+    <!-- پایان -->
+    <div class="workshop-end">
+      <p>پایان گالری</p>
+      <span>✦ ✦ ✦</span>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

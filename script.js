@@ -277,3 +277,125 @@ document.addEventListener('keydown', (e) => {
     closeSchedule();
   }
 });
+// ============================================
+// 🔧 مودال کارگاه‌ها
+// ============================================
+
+const workshopData = {
+  computer: {
+    title: 'کارگاه کامپیوتر ما',
+    background: 'workshop-computer-bg.png',
+    text: `کارگاه کامپیوتر هنرستان اندیشه، یکی از مجهزترین کارگاه‌های فنی منطقه است. 
+    
+در این کارگاه، هر دانش‌آموز به یک سیستم اختصاصی با آخرین نسخه‌های نرم‌افزاری دسترسی دارد. سیستم‌ها به‌روز و پرسرعت هستند و برای یادگیری برنامه‌نویسی، طراحی گرافیک، امنیت سایبری و مهارت‌های دیجیتال، بهترین بستر را فراهم می‌کنند.
+
+ما باور داریم که کیفیت آموزش، مستقیماً به کیفیت امکانات بستگی دارد. به همین دلیل، سرمایه‌گذاری روی تجهیزات به‌روز و محیط آموزشی مدرن، اولویت ماست.`,
+    images: [
+      'workshop-computer-1.png',
+      'workshop-computer-2.png',
+      'workshop-computer-3.png',
+    ],
+    video: 'workshop-computer-video.mp4',
+  },
+  mechanic: {
+    title: 'کارگاه مکانیک ما',
+    background: 'workshop-mechanic-bg.png',
+    text: `کارگاه مکانیک هنرستان اندیشه، محیطی حرفه‌ای برای یادگیری مهارت‌های فنی و صنعتی است.
+
+این کارگاه به ابزارها و تجهیزات حرفه‌ای مجهز است و دانش‌آموزان می‌توانند به صورت عملی با موتورها، سیستم‌های انتقال قدرت و تکنیک‌های تعمیرات خودرو کار کنند. آموزش عملی در این کارگاه، دانش‌آموزان را برای ورود به بازار کار و ادامه تحصیل در رشته‌های مهندسی مکانیک آماده می‌کند.
+
+هدف ما تربیت نیروی متخصص و ماهر است که بتواند با اعتماد به نفس، در صنعت کشور خدمت کند.`,
+    images: [
+      'workshop-mechanic-1.png',
+      'workshop-mechanic-2.png',
+      'workshop-mechanic-3.png',
+    ],
+    video: 'workshop-mechanic-video.mp4',
+  },
+};
+
+function openWorkshop(type) {
+  const data = workshopData[type];
+  if (!data) return;
+
+  const modal = document.getElementById('workshopModal');
+  const content = modal.querySelector('.workshop-content');
+
+  // تنظیم عنوان
+  document.getElementById('workshopTitle').textContent = data.title;
+
+  // تنظیم بک‌گراند
+  const heroBg = modal.querySelector('.workshop-hero-bg');
+  heroBg.style.backgroundImage = `url('${data.background}')`;
+
+  // تنظیم متن
+  document.getElementById('workshopText').textContent = data.text;
+
+  // تنظیم گالری
+  const gallery = document.getElementById('workshopGallery');
+  gallery.innerHTML = data.images
+    .map((img, i) => `<img src="${img}" alt="تصویر ${i + 1}" class="workshop-fade-up">`)
+    .join('');
+
+  // تنظیم ویدیو
+  const videoSource = document.getElementById('workshopVideoSource');
+  const video = document.getElementById('workshopVideo');
+  videoSource.src = data.video;
+  video.load();
+
+  // باز کردن مودال
+  modal.classList.add('open');
+  document.body.classList.add('modal-open');
+  content.scrollTop = 0;
+  modal.scrollTop = 0;
+
+  // راه‌اندازی انیمیشن اسکرول بعد از باز شدن
+  setTimeout(() => {
+    setupWorkshopReveal();
+  }, 100);
+}
+
+function closeWorkshop() {
+  const modal = document.getElementById('workshopModal');
+  modal.classList.remove('open');
+  document.body.classList.remove('modal-open');
+
+  // متوقف کردن ویدیو
+  const video = document.getElementById('workshopVideo');
+  if (video) {
+    video.pause();
+    video.currentTime = 0;
+  }
+}
+
+// انیمیشن اسکرول داخل مودال
+function setupWorkshopReveal() {
+  const modal = document.getElementById('workshopModal');
+  const elements = modal.querySelectorAll('.workshop-fade-up');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    },
+    {
+      root: modal,
+      threshold: 0.15,
+    }
+  );
+
+  elements.forEach((el) => observer.observe(el));
+}
+
+// بستن با کلید Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('workshopModal');
+    if (modal && modal.classList.contains('open')) {
+      closeWorkshop();
+    }
+  }
+});
