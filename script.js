@@ -186,57 +186,188 @@ if (canvas) {
   animateParticles();
 }
 
-// ===== موس سفارشی =====
-const cursor = document.createElement('div');
-cursor.style.cssText = `position:fixed;width:20px;height:20px;border:2px solid #d4af37;border-radius:50%;pointer-events:none;z-index:99999;transition:transform 0.15s,width 0.3s,height 0.3s,background 0.3s;mix-blend-mode:difference;`;
-document.body.appendChild(cursor);
+// ============================================
+// 🖱️ موس سفارشی + دنباله ذرات (فقط دسکتاپ)
+// ============================================
 
-const cursorDot = document.createElement('div');
-cursorDot.style.cssText = `position:fixed;width:6px;height:6px;background:#ffd700;border-radius:50%;pointer-events:none;z-index:100000;box-shadow:0 0 15px #ffd700;`;
-document.body.appendChild(cursorDot);
+const isTouchDevice = 
+  'ontouchstart' in window || 
+  navigator.maxTouchPoints > 0 || 
+  window.matchMedia('(hover: none)').matches;
 
-let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX; mouseY = e.clientY;
-  cursorDot.style.left = mouseX - 3 + 'px';
-  cursorDot.style.top = mouseY - 3 + 'px';
-});
-function animateCursor() {
-  cursorX += (mouseX - cursorX) * 0.15;
-  cursorY += (mouseY - cursorY) * 0.15;
-  cursor.style.left = cursorX - 10 + 'px';
-  cursor.style.top = cursorY - 10 + 'px';
-  requestAnimationFrame(animateCursor);
-}
-animateCursor();
+if (!isTouchDevice) {
+  // ===== نشانگر اصلی (دایره بزرگ) =====
+  const cursor = document.createElement('div');
+  cursor.style.cssText = `
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d4af37;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
+    mix-blend-mode: difference;
+    will-change: transform;
+  `;
+  document.body.appendChild(cursor);
 
-document.querySelectorAll('a, button, .feature-card, .contact-card').forEach((el) => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.width = '50px'; cursor.style.height = '50px';
-    cursor.style.background = 'rgba(212, 175, 55, 0.15)';
+  // ===== نقطه مرکزی =====
+  const cursorDot = document.createElement('div');
+  cursorDot.style.cssText = `
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: #ffd700;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100000;
+    box-shadow: 0 0 15px #ffd700, 0 0 30px rgba(255, 215, 0, 0.5);
+    will-change: transform;
+  `;
+  document.body.appendChild(cursorDot);
+
+  // ===== کانواس دنباله ذرات =====
+  const trailCanvas = document.createElement('canvas');
+  trailCanvas.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 99998;
+  `;
+  document.body.appendChild(trailCanvas);
+
+  const tctx = trailCanvas.getContext('2d');
+  let tw = (trailCanvas.width = window.innerWidth);
+  let th = (trailCanvas.height = window.innerHeight);
+
+  window.addEventListener('resize', () => {
+    tw = trailCanvas.width = window.innerWidth;
+    th = trailCanvas.height = window.innerHeight;
   });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.width = '20px'; cursor.style.height = '20px';
-    cursor.style.background = 'transparent';
-  });
-});
 
-window.addEventListener('click', (e) => {
-  const modal = document.getElementById('loginModal');
-  if (e.target === modal) closeLogin();
-});
+  // ===== متغیرهای موقعیت =====
+  let mouseX = 0;
+  let mouseY = 0;
+  let cursorX = 0;
+  let cursorY = 0;
+  let lastX = 0;
+  let lastY = 0;
 
-window.addEventListener('scroll', () => {
-  const navbar = document.querySelector('.navbar');
-  if (!navbar) return;
-  if (window.scrollY > 50) {
-    navbar.style.background = 'rgba(5, 5, 15, 0.95)';
-    navbar.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.5)';
-  } else {
-    navbar.style.background = 'rgba(5, 5, 15, 0.7)';
-    navbar.style.boxShadow = 'none';
+  // ===== ذرات دنباله =====
+  const trailParticles = [];
+  const MAX_PARTICLES = 100;
+
+  class TrailParticle {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.vx = (Math.random() - 0.5) * 2;
+      this.vy = (Math.random() - 0.5) * 2;
+      this.life = 1;
+      this.size = Math.random() * 4 + 2;
+      this.color = Math.random() > 0.5 
+        ? { r: 212, g: 175, b: 55 }   // طلایی
+        : { r: 0, g: 212, b: 255 };    // آبی
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vy += 0.05; // جاذبه ملایم
+      this.life -= 0.02;
+      this.size *= 0.97;
+    }
+
+    draw() {
+      tctx.beginPath();
+      tctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      tctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.life})`;
+      tctx.shadowBlur = 15;
+      tctx.shadowColor = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.life})`;
+      tctx.fill();
+    }
   }
-});
+
+  // ===== حرکت موس =====
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+    cursorDot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px)`;
+
+    // فاصله از موقعیت قبلی
+    const dx = mouseX - lastX;
+    const dy = mouseY - lastY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // تعداد ذرات بر اساس سرعت حرکت
+    const particleCount = Math.min(Math.floor(distance / 3), 5);
+
+    for (let i = 0; i < particleCount; i++) {
+      // یه ذره با موقعیت رندوم بین دو نقطه
+      const t = i / particleCount;
+      const px = lastX + dx * t + (Math.random() - 0.5) * 6;
+      const py = lastY + dy * t + (Math.random() - 0.5) * 6;
+
+      if (trailParticles.length < MAX_PARTICLES) {
+        trailParticles.push(new TrailParticle(px, py));
+      }
+    }
+
+    lastX = mouseX;
+    lastY = mouseY;
+  });
+
+  // ===== انیمیشن نشانگر =====
+  function animateCursor() {
+    cursorX += (mouseX - cursorX) * 0.15;
+    cursorY += (mouseY - cursorY) * 0.15;
+    cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // ===== انیمیشن دنباله ذرات =====
+  function animateTrail() {
+    tctx.clearRect(0, 0, tw, th);
+
+    for (let i = trailParticles.length - 1; i >= 0; i--) {
+      const p = trailParticles[i];
+      p.update();
+      p.draw();
+
+      if (p.life <= 0 || p.size < 0.5) {
+        trailParticles.splice(i, 1);
+      }
+    }
+
+    requestAnimationFrame(animateTrail);
+  }
+  animateTrail();
+
+  // ===== افکت hover روی عناصر =====
+  document.querySelectorAll('a, button, .feature-card, .contact-card, .btn-glow, .btn-login, .schedule-fab').forEach((el) => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '50px';
+      cursor.style.height = '50px';
+      cursor.style.background = 'rgba(212, 175, 55, 0.15)';
+      cursor.style.borderColor = '#ffd700';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      cursor.style.background = 'transparent';
+      cursor.style.borderColor = '#d4af37';
+    });
+  });
+
+  // ===== مخفی کردن نشانگر پیش‌فرض =====
+  document.body.style.cursor = 'none';
+}
 // ============================================
 // 📅 برنامه هفتگی - Modal
 // ============================================
@@ -398,4 +529,203 @@ document.addEventListener('keydown', (e) => {
       closeWorkshop();
     }
   }
+});
+// ===== Preloader =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      preloader.classList.add('hidden');
+      setTimeout(() => preloader.remove(), 800);
+    }
+  }, 2200); // ۲.۲ ثانیه — همون قدر که انیمیشن Progress طول می‌کشه
+});
+// ============================================
+// 🌙 تم روشن/تاریک با افکت دایره‌ای
+// ============================================
+
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = themeToggle ? themeToggle.querySelector('.theme-icon') : null;
+
+// ===== بارگذاری تم ذخیره‌شده =====
+function loadTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+    document.body.classList.remove('dark-theme');
+    if (themeIcon) themeIcon.textContent = '☀️';
+  } else {
+    document.body.classList.add('dark-theme');
+    document.body.classList.remove('light-theme');
+    if (themeIcon) themeIcon.textContent = '🌙';
+  }
+}
+
+loadTheme();
+
+// ===== تغییر تم با افکت دایره‌ای =====
+if (themeToggle) {
+  themeToggle.addEventListener('click', (e) => {
+    const isLight = document.body.classList.contains('light-theme');
+    const newTheme = isLight ? 'dark' : 'light';
+
+    // چک کن مرورگر از View Transitions پشتیبانی می‌کنه
+    if (!document.startViewTransition) {
+      // اگه پشتیبانی نکرد، بدون انیمیشن تغییر بده
+      applyTheme(newTheme);
+      return;
+    }
+
+    // موقعیت دکمه برای شروع دایره
+    const rect = themeToggle.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    // فاصله تا دورترین گوشه صفحه
+    const maxX = Math.max(x, window.innerWidth - x);
+    const maxY = Math.max(y, window.innerHeight - y);
+    const radius = Math.sqrt(maxX * maxX + maxY * maxY);
+
+    // افکت چرخش آیکون
+    document.body.classList.add('dark-mode-transition');
+    setTimeout(() => document.body.classList.remove('dark-mode-transition'), 600);
+
+    // View Transition
+    const transition = document.startViewTransition(() => {
+      applyTheme(newTheme);
+    });
+
+    transition.ready.then(() => {
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${radius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 700,
+          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+    });
+  });
+}
+
+// ===== اعمال تم =====
+function applyTheme(theme) {
+  if (theme === 'light') {
+    document.body.classList.add('light-theme');
+    document.body.classList.remove('dark-theme');
+    if (themeIcon) themeIcon.textContent = '☀️';
+    localStorage.setItem('theme', 'light');
+  } else {
+    document.body.classList.add('dark-theme');
+    document.body.classList.remove('light-theme');
+    if (themeIcon) themeIcon.textContent = '🌙';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+// ===== شمارنده آمار =====
+const statNumbers = document.querySelectorAll('.stat-number');
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      let current = 0;
+      const duration = 2000;
+      const step = target / (duration / 16);
+      
+      const counter = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          el.textContent = toPersianNumber(target) + '+';
+          clearInterval(counter);
+        } else {
+          el.textContent = toPersianNumber(Math.floor(current));
+        }
+      }, 16);
+      
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+
+statNumbers.forEach((el) => counterObserver.observe(el));
+
+// تبدیل اعداد انگلیسی به فارسی
+function toPersianNumber(num) {
+  const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+  return num.toString().replace(/\d/g, (d) => persianDigits[d]);
+}
+// ===== افکت Magnetism روی دکمه‌ها =====
+if (!isTouchDevice) {
+  const magneticElements = document.querySelectorAll('.btn-glow, .hero-btn, .btn-login, .telegram-link');
+
+  magneticElements.forEach((el) => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+
+      el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.05)`;
+      el.style.transition = 'transform 0.1s';
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'translate(0, 0) scale(1)';
+      el.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+    });
+  });
+}
+// ===== افکت Ripple روی کلیک =====
+document.addEventListener('click', (e) => {
+  if (isTouchDevice) return;
+  
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  ripple.style.left = e.clientX - 25 + 'px';
+  ripple.style.top = e.clientY - 25 + 'px';
+  ripple.style.width = '50px';
+  ripple.style.height = '50px';
+  
+  document.body.appendChild(ripple);
+  
+  setTimeout(() => ripple.remove(), 800);
+});
+// ===== Split Text Animation =====
+function splitTextToWords(element) {
+  const text = element.textContent.trim();
+  const words = text.split(/\s+/);
+  
+  element.innerHTML = words
+    .map((word, i) => 
+      `<span class="split-word" style="animation-delay: ${i * 0.1}s">${word}</span>`
+    )
+    .join(' ');
+}
+
+// اجرا روی عنوان‌های اصلی بعد از لود
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const heroLines = document.querySelectorAll('.hero-title .line');
+    heroLines.forEach((line) => {
+      const original = line.textContent;
+      line.textContent = '';
+      line.style.opacity = '1';
+      
+      const words = original.split(/\s+/);
+      words.forEach((word, i) => {
+        const span = document.createElement('span');
+        span.className = 'split-word';
+        span.style.animationDelay = (i * 0.15) + 's';
+        span.textContent = word;
+        line.appendChild(span);
+        line.appendChild(document.createTextNode(' '));
+      });
+    });
+  }, 2300); // بعد از Preloader
 });

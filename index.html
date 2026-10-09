@@ -11,21 +11,38 @@
 </head>
 <body>
 
+  <!-- ===== Preloader ===== -->
+<div id="preloader">
+  <div class="preloader-content">
+    <div class="preloader-logo">🏛️</div>
+    <div class="preloader-text">هنرستان اندیشه</div>
+    <div class="preloader-bar">
+      <div class="preloader-progress"></div>
+    </div>
+  </div>
+</div>
+
   <!-- ===== ذرات شناور ===== -->
   <canvas id="particles"></canvas>
 
   <!-- ===== نوار بالا ===== -->
-  <nav class="navbar">
-    <div class="logo">
-      <span class="logo-icon">🏛️</span>
-      <span class="logo-text">هنرستان اندیشه</span>
-    </div>
-    <div class="nav-icons">
-      <a href="#" title="کانال تلگرام">📱</a>
-      <a href="#" title="اینستاگرام">📷</a>
-      <a href="tel:44104466" title="تماس">📞</a>
-    </div>
-  </nav>
+<nav class="navbar">
+  <div class="logo">
+    <span class="logo-icon">🏛️</span>
+    <span class="logo-text">هنرستان اندیشه</span>
+  </div>
+  <div class="nav-icons">
+    <a href="#" title="کانال تلگرام">📱</a>
+    <a href="#" title="اینستاگرام">📷</a>
+    <a href="tel:44104466" title="تماس">📞</a>
+    <button id="themeToggle" class="theme-toggle" aria-label="تغییر تم">
+      <span class="theme-icon">🌙</span>
+    </button>
+  </div>
+</nav>
+  <button id="themeToggle" class="theme-toggle" aria-label="تغییر تم">
+  <span class="theme-icon">🌙</span>
+</button>
 
   <!-- ===== بخش Hero ===== -->
   <section class="hero">
@@ -93,6 +110,35 @@
     <span class="card-hint">برای مشاهده کلیک کنید →</span>
   </div>
 </div>
+  </div>
+</section>
+<!-- ===== بخش آمار ===== -->
+<section class="section stats-section">
+  <div class="section-bg"></div>
+  <div class="section-container">
+    <div class="section-header reveal">
+      <span class="section-number">۰۳</span>
+      <h2>مدرسه در یک نگاه</h2>
+      <div class="title-line"></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="500">۰</div>
+        <div class="stat-label">دانش‌آموز</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="30">۰</div>
+        <div class="stat-label">معلم و کارمند</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="10">۰</div>
+        <div class="stat-label">کلاس درس</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="15">۰</div>
+        <div class="stat-label">سال تجربه</div>
+      </div>
+    </div>
   </div>
 </section>
 
