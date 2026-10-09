@@ -933,3 +933,27 @@ window.addEventListener('load', () => {
     loadAndShowAnnouncements();
   }, 3000); // بعد از Preloader
 });
+// ============================================
+// 🛠️ توابع کمکی
+// ============================================
+
+// پاکسازی ورودی (جلوگیری از XSS)
+function sanitizeInput(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ثبت لاگ فعالیت
+async function logActivity(action, details = null) {
+  try {
+    await sb.from('activity_logs').insert({
+      user_id: currentUser ? currentUser.id : null,
+      action: action,
+      details: details,
+    });
+  } catch (err) {
+    console.warn('Log failed:', err);
+  }
+}
