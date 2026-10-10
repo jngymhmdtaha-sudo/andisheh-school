@@ -85,6 +85,12 @@ async function showDashboard() {
   if (currentUser.role === 'teacher' || currentUser.role === 'admin') {
     document.getElementById('teacherPanel').style.display = 'block';
   }
+  if (currentUser.role === 'admin') {
+  document.getElementById('adminPanel').style.display = 'block';
+}
+// نمایش اعلان‌ها برای همه
+document.getElementById('announcements-section').style.display = 'flex';
+await loadAnnouncements();
 
   document.getElementById('assignmentsSection').style.display = 'block';
   await loadAssignments();
@@ -98,6 +104,8 @@ async function logout() {
   document.getElementById('assignmentsSection').style.display = 'none';
   document.getElementById('login-section').style.display = 'flex';
   localStorage.removeItem('andisheh-school-auth');
+  document.getElementById('adminPanel').style.display = 'none';
+document.getElementById('announcements-section').style.display = 'none';
 }
 
 // ===== ایجاد تکلیف =====
@@ -1015,3 +1023,82 @@ async function checkSession() {
 
 // اجرا در بارگذاری صفحه
 checkSession();
+// ===== ساخت اعلان (فقط مدیر) =====
+async function createAnnouncement() {
+  if (!currentUser || currentUser.role !== 'admin') {
+    alert('❌ فقط مدیر می‌تونه اعلان بسازه!');
+    return;
+  }
+
+  const title = document.getElementById('announcementTitle').value.trim();
+  const body = document.getElementById('announcementText').value.trim();
+  const expiry = document.getElementById('announcementExpiry').value;
+
+  if (!title || !body) {
+    alert('❌ عنوان و متن اعلان رو پر کن!');
+    return;
+  }
+
+  const { error } = await sb.from('announcements').insert({
+    title: title,
+    body: body,
+    expires_at: expiry ? new Date(expiry).toISOString() : null,
+    created_by: currentUser.id,
+  });
+
+  if (error) {
+    alert('❌ خطا: ' + error.message);
+    return;
+  }
+
+  document.getElementById('announcementTitle').value = '';
+  document.getElementById('announcementText').value = '';
+  document.getElementById('announcementExpiry').value = '';
+  alert('✅ اعلان با موفقیت منتشر شد!');
+  await loadAnnouncements();
+}
+
+// ===== نمایش اعلان‌ها =====
+async function loadAnnouncements() {
+  const container = document.getElementById('announcementsList');
+  if (!container) return;
+
+  const now = new Date().toISOString();
+  
+  // فقط اعلان‌هایی که منقضی نشدن
+  const { data: announcements, error } = await sb
+    .from('announcements')
+    .select('*')
+    .or(`expires_at.is.null,expires_at.gt.${now}`)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.log('خطا در بارگذاری اعلان‌ها:', error);
+    container.innerHTML = '<p style="color:#ff6666;">خطا در بارگذاری اعلان‌ها</p>';
+    return;
+  }
+
+  if (!announcements || announcements.length === 0) {
+    container.innerHTML = '<p style="color:#a0a0b8;text-align:center;padding:40px;">📭 هنوز اعلانی ثبت نشده.</p>';
+    return;
+  }
+
+  container.innerHTML = announcements.map((a) => {
+    const createdDate = new Date(a.created_at).toLocaleDateString('fa-IR');
+    let expiryHtml = '';
+    
+    if (a.expires_at) {
+      const expiryDate = new Date(a.expires_at).toLocaleDateString('fa-IR');
+      expiryHtml = `<div class="expiry">⏰ معتبر تا: ${expiryDate}</div>`;
+    }
+    
+    return `
+      <div class="announcement-card">
+        <h3>${a.title}</h3>
+        <p class="meta">📅 ${createdDate}</p>
+        <p>${a.body}</p>
+        ${expiryHtml}
+      </div>
+    `;
+  }).join('');
+}

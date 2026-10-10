@@ -2426,3 +2426,103 @@ body.light-theme .admin-announcement-item p {
     flex-direction: column;
   }
 }
+/* ===== اعلان‌ها ===== */
+.announcements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.announcement-card {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0, 212, 255, 0.05));
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-right: 5px solid #d4af37;
+  border-radius: 16px;
+  padding: 25px;
+  text-align: right;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+  animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.announcement-card:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2);
+  border-right-color: #ffd700;
+}
+
+.announcement-card h3 {
+  color: #d4af37;
+  font-size: 22px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.announcement-card h3::before {
+  content: '📢';
+  font-size: 24px;
+}
+
+.announcement-card .meta {
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+.announcement-card p {
+  color: #e0e0e0;
+  line-height: 1.9;
+  font-size: 16px;
+}
+
+.announcement-card .expiry {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  font-size: 13px;
+  color: #00d4ff;
+}
+
+#announcementTitle,
+#announcementText,
+#announcementExpiry {
+  width: 100%;
+  padding: 14px 18px;
+  margin: 10px 0;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 12px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+
+#announcementTitle:focus,
+#announcementText:focus,
+#announcementExpiry:focus {
+  outline: none;
+  border-color: #ffd700;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+#announcementText {
+  min-height: 120px;
+  resize: vertical;
+}
