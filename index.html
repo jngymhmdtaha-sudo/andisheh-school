@@ -12,15 +12,15 @@
 <body>
 
   <!-- ===== Preloader ===== -->
-<div id="preloader">
-  <div class="preloader-content">
-    <div class="preloader-logo">🏛️</div>
-    <div class="preloader-text">هنرستان اندیشه</div>
-    <div class="preloader-bar">
-      <div class="preloader-progress"></div>
+  <div id="preloader">
+    <div class="preloader-content">
+      <div class="preloader-logo">🏛️</div>
+      <div class="preloader-text">هنرستان اندیشه</div>
+      <div class="preloader-bar">
+        <div class="preloader-progress"></div>
+      </div>
     </div>
   </div>
-</div>
 
   <!-- ===== ذرات شناور ===== -->
   <canvas id="particles"></canvas>
@@ -41,12 +41,12 @@
     </div>
   </nav>
 
-    <!-- ===== نوار اعلان ===== -->
+  <!-- ===== نوار اعلان ===== -->
   <div id="announcementBanner" class="announcement-banner" style="display: none;">
     <span class="announcement-icon" id="announcementIcon">📢</span>
     <div class="announcement-content">
-      <strong id="announcementTitle"></strong>
-      <p id="announcementBody"></p>
+      <strong id="announcementTitleDisplay"></strong>
+      <p id="announcementBodyDisplay"></p>
     </div>
     <button class="announcement-close" onclick="closeAnnouncement()">&times;</button>
   </div>
@@ -55,7 +55,6 @@
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
-    
     <div class="hero-content">
       <div class="hero-badge">✦ خوش آمدید ✦</div>
       <h1 class="hero-title">
@@ -68,11 +67,8 @@
         <span class="arrow">↓</span>
       </a>
     </div>
-
     <div class="scroll-indicator">
-      <div class="mouse">
-        <div class="wheel"></div>
-      </div>
+      <div class="mouse"><div class="wheel"></div></div>
     </div>
   </section>
 
@@ -94,60 +90,87 @@
     </div>
   </section>
 
-<!-- ===== بخش امکانات ===== -->
-<section class="section">
-  <div class="section-bg"></div>
-  <div class="section-container">
-    <div class="section-header reveal">
-      <span class="section-number">۰۲</span>
-      <h2>امکانات ما</h2>
-      <div class="title-line"></div>
-    </div>
-    <div class="features-grid">
-  <div class="feature-card reveal" onclick="openWorkshop('computer')">
-    <div class="feature-icon">🖥️</div>
-    <h3>کارگاه کامپیوتر</h3>
-    <p>سیستم‌های به‌روز و مجهز</p>
-    <span class="card-hint">برای مشاهده کلیک کنید →</span>
-  </div>
-  <div class="feature-card reveal" onclick="openWorkshop('mechanic')">
-    <div class="feature-icon">🔧</div>
-    <h3>کارگاه مکانیک</h3>
-    <p>تجهیزات حرفه‌ای و کامل</p>
-    <span class="card-hint">برای مشاهده کلیک کنید →</span>
-  </div>
-</div>
-  </div>
-</section>
-<!-- ===== بخش آمار ===== -->
-<section class="section stats-section">
-  <div class="section-bg"></div>
-  <div class="section-container">
-    <div class="section-header reveal">
-      <span class="section-number">۰۳</span>
-      <h2>مدرسه در یک نگاه</h2>
-      <div class="title-line"></div>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card reveal">
-        <div class="stat-number" data-target="500">۰</div>
-        <div class="stat-label">دانش‌آموز</div>
+  <!-- ===== بخش امکانات ===== -->
+  <section class="section">
+    <div class="section-bg"></div>
+    <div class="section-container">
+      <div class="section-header reveal">
+        <span class="section-number">۰۲</span>
+        <h2>امکانات ما</h2>
+        <div class="title-line"></div>
       </div>
-      <div class="stat-card reveal">
-        <div class="stat-number" data-target="30">۰</div>
-        <div class="stat-label">معلم و کارمند</div>
-      </div>
-      <div class="stat-card reveal">
-        <div class="stat-number" data-target="10">۰</div>
-        <div class="stat-label">کلاس درس</div>
-      </div>
-      <div class="stat-card reveal">
-        <div class="stat-number" data-target="15">۰</div>
-        <div class="stat-label">سال تجربه</div>
+      <div class="features-grid">
+        <div class="feature-card reveal" onclick="openWorkshop('computer')">
+          <div class="feature-icon">🖥️</div>
+          <h3>کارگاه کامپیوتر</h3>
+          <p>سیستم‌های به‌روز و مجهز</p>
+          <span class="card-hint">برای مشاهده کلیک کنید →</span>
+        </div>
+        <div class="feature-card reveal" onclick="openWorkshop('mechanic')">
+          <div class="feature-icon">🔧</div>
+          <h3>کارگاه مکانیک</h3>
+          <p>تجهیزات حرفه‌ای و کامل</p>
+          <span class="card-hint">برای مشاهده کلیک کنید →</span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- ===== بخش آمار ===== -->
+  <section class="section stats-section">
+    <div class="section-bg"></div>
+    <div class="section-container">
+      <div class="section-header reveal">
+        <span class="section-number">۰۳</span>
+        <h2>مدرسه در یک نگاه</h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card reveal">
+          <div class="stat-number" data-target="500">۰</div>
+          <div class="stat-label">دانش‌آموز</div>
+        </div>
+        <div class="stat-card reveal">
+          <div class="stat-number" data-target="30">۰</div>
+          <div class="stat-label">معلم و کارمند</div>
+        </div>
+        <div class="stat-card reveal">
+          <div class="stat-number" data-target="10">۰</div>
+          <div class="stat-label">کلاس درس</div>
+        </div>
+        <div class="stat-card reveal">
+          <div class="stat-number" data-target="15">۰</div>
+          <div class="stat-label">سال تجربه</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== بخش ورود ===== -->
+  <section class="section" id="login-section">
+    <div class="section-bg"></div>
+    <div class="section-container">
+      <div class="section-header reveal">
+        <span class="section-number">۰۴</span>
+        <h2>ورود به سیستم</h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="login-buttons reveal">
+        <button onclick="openLogin('teacher')" class="btn-glow">
+          <span class="btn-icon">👨‍🏫</span>
+          <span>ورود معلم</span>
+        </button>
+        <button onclick="openLogin('student')" class="btn-glow">
+          <span class="btn-icon">👨‍🎓</span>
+          <span>ورود دانش‌آموز</span>
+        </button>
+        <button onclick="openLogin('manager')" class="btn-glow btn-manager">
+          <span class="btn-icon">👔</span>
+          <span>ورود مدیر</span>
+        </button>
+      </div>
+    </div>
+  </section>
 
   <!-- ===== پنل معلم ===== -->
   <div id="teacherPanel" class="dashboard" style="display: none;">
@@ -177,106 +200,65 @@
   </div>
 
   <!-- ===== پنل مدیر ===== -->
-<div id="adminPanel" class="dashboard" style="display: none;">
-  <div class="dashboard-content">
-    <h2>📢 ثبت اعلان جدید</h2>
-    <input type="text" id="announcementTitle" placeholder="عنوان اعلان..." />
-    <textarea id="announcementText" placeholder="متن اعلان..."></textarea>
-    <input type="date" id="announcementExpiry" placeholder="تاریخ انقضا (اختیاری)" />
-    <div class="form-actions">
-      <button onclick="createAnnouncement()" class="btn-glow">📢 انتشار اعلان</button>
+  <div id="adminPanel" class="dashboard admin-panel" style="display: none;">
+    <div class="dashboard-content">
+      <h2>👔 پنل مدیریت مدرسه</h2>
+      <p class="welcome-msg">خوش آمدید، <span id="adminName"></span></p>
+
+      <div class="admin-stats">
+        <div class="admin-stat">
+          <span class="stat-icon">👨‍🎓</span>
+          <span class="stat-value" id="statStudents">۰</span>
+          <span class="stat-label">دانش‌آموز</span>
+        </div>
+        <div class="admin-stat">
+          <span class="stat-icon">👨‍🏫</span>
+          <span class="stat-value" id="statTeachers">۰</span>
+          <span class="stat-label">معلم</span>
+        </div>
+        <div class="admin-stat">
+          <span class="stat-icon">📚</span>
+          <span class="stat-value" id="statAssignments">۰</span>
+          <span class="stat-label">تکلیف</span>
+        </div>
+        <div class="admin-stat">
+          <span class="stat-icon">📢</span>
+          <span class="stat-value" id="statAnnouncements">۰</span>
+          <span class="stat-label">اعلان</span>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <h3>📢 ثبت اعلان جدید</h3>
+        <input type="text" id="announcementTitleInput" placeholder="عنوان اعلان (مثلاً: فردا تعطیل است)" maxlength="100">
+        <textarea id="announcementBodyInput" placeholder="متن کامل اعلان..." maxlength="500"></textarea>
+        <div class="form-row">
+          <select id="announcementType">
+            <option value="info">ℹ️ اطلاعاتی</option>
+            <option value="success">✅ موفقیت</option>
+            <option value="warning">⚠️ هشدار</option>
+            <option value="danger">🚨 مهم</option>
+            <option value="urgent">🔥 فوری</option>
+          </select>
+          <select id="announcementExpiry">
+            <option value="1">۱ روز</option>
+            <option value="3">۳ روز</option>
+            <option value="7" selected>۱ هفته</option>
+            <option value="30">۱ ماه</option>
+            <option value="0">بدون انقضا</option>
+          </select>
+        </div>
+        <button onclick="createAnnouncement()" class="btn-glow">📤 انتشار اعلان</button>
+      </div>
+
+      <div class="admin-section">
+        <h3>📋 اعلان‌های فعال</h3>
+        <div id="adminAnnouncementsList"></div>
+      </div>
+
+      <button onclick="logout()" class="btn-outline">🚪 خروج</button>
     </div>
   </div>
-</div>
-    <!-- ===== بخش ورود ===== -->
-  <section class="section" id="login-section">
-    <div class="section-bg"></div>
-    <div class="section-container">
-      <div class="section-header reveal">
-        <span class="section-number">۰۳</span>
-        <h2>ورود به سیستم</h2>
-        <div class="title-line"></div>
-      </div>
-      <div class="login-buttons reveal">
-        <button onclick="openLogin('teacher')" class="btn-glow">
-          <span class="btn-icon">👨‍🏫</span>
-          <span>ورود معلم</span>
-        </button>
-        <button onclick="openLogin('student')" class="btn-glow">
-          <span class="btn-icon">👨‍🎓</span>
-          <span>ورود دانش‌آموز</span>
-        </button>
-        <button onclick="openLogin('manager')" class="btn-glow btn-manager">
-          <span class="btn-icon">👔</span>
-          <span>ورود مدیر</span>
-        </button>
-      </div>
-    </div>
-  </section>
-
-<!-- ===== پنل مدیر ===== -->
-<div id="adminPanel" class="dashboard admin-panel" style="display: none;">
-  <div class="dashboard-content">
-    <h2>👔 پنل مدیریت مدرسه</h2>
-    <p class="welcome-msg">خوش آمدید، <span id="adminName"></span></p>
-
-    <!-- آمار -->
-    <div class="admin-stats">
-      <div class="admin-stat">
-        <span class="stat-icon">👨‍🎓</span>
-        <span class="stat-value" id="statStudents">۰</span>
-        <span class="stat-label">دانش‌آموز</span>
-      </div>
-      <div class="admin-stat">
-        <span class="stat-icon">👨‍🏫</span>
-        <span class="stat-value" id="statTeachers">۰</span>
-        <span class="stat-label">معلم</span>
-      </div>
-      <div class="admin-stat">
-        <span class="stat-icon">📚</span>
-        <span class="stat-value" id="statAssignments">۰</span>
-        <span class="stat-label">تکلیف</span>
-      </div>
-      <div class="admin-stat">
-        <span class="stat-icon">📢</span>
-        <span class="stat-value" id="statAnnouncements">۰</span>
-        <span class="stat-label">اعلان</span>
-      </div>
-    </div>
-
-    <!-- فرم اعلان جدید -->
-    <div class="admin-section">
-      <h3>📢 ثبت اعلان جدید</h3>
-      <input type="text" id="announcementTitleInput" placeholder="عنوان اعلان (مثلاً: فردا تعطیل است)" maxlength="100">
-      <textarea id="announcementBodyInput" placeholder="متن کامل اعلان..." maxlength="500"></textarea>
-      <div class="form-row">
-        <select id="announcementType">
-          <option value="info">ℹ️ اطلاعاتی</option>
-          <option value="success">✅ موفقیت</option>
-          <option value="warning">⚠️ هشدار</option>
-          <option value="danger">🚨 مهم</option>
-          <option value="urgent">🔥 فوری</option>
-        </select>
-        <select id="announcementExpiry">
-          <option value="1">۱ روز</option>
-          <option value="3">۳ روز</option>
-          <option value="7" selected>۱ هفته</option>
-          <option value="30">۱ ماه</option>
-          <option value="0">بدون انقضا</option>
-        </select>
-      </div>
-      <button onclick="createAnnouncement()" class="btn-glow">📤 انتشار اعلان</button>
-    </div>
-
-    <!-- لیست اعلان‌های فعال -->
-    <div class="admin-section">
-      <h3>📋 اعلان‌های فعال</h3>
-      <div id="adminAnnouncementsList"></div>
-    </div>
-
-    <button onclick="logout()" class="btn-outline">🚪 خروج</button>
-  </div>
-</div>
 
   <!-- ===== لیست تکالیف ===== -->
   <div id="assignmentsSection" class="assignments" style="display: none;">
@@ -290,14 +272,14 @@
     <div class="section-bg"></div>
     <div class="section-container">
       <div class="section-header reveal">
-        <span class="section-number">۰۴</span>
+        <span class="section-number">۰۵</span>
         <h2>تماس با ما</h2>
         <div class="title-line"></div>
       </div>
       <div class="contact-grid">
         <div class="contact-card reveal">
           <div class="contact-icon">📍</div>
-          <span>تهران بزرگ راه علامه جعفری دبیرستان اندیشه (محله ورزشگاه ازادی)</span>
+          <span>تهران، بزرگ راه علامه جعفری، دبیرستان اندیشه (محله ورزشگاه آزادی)</span>
         </div>
         <div class="contact-card reveal">
           <div class="contact-icon">📞</div>
@@ -327,10 +309,10 @@
       <span class="close" onclick="closeLogin()">&times;</span>
       <div class="modal-icon">🔐</div>
       <h2 id="loginTitle">ورود</h2>
-      <input type="text" id="loginUsername" placeholder="نام کاربری">
+      <input type="text" id="loginUsername" placeholder="ایمیل">
       <input type="password" id="loginPassword" placeholder="رمز عبور">
       <button onclick="doLogin()" class="btn-glow btn-full">ورود به سیستم</button>
-      <p class="hint">راهنما: معلم → teacher1 / 1234 | دانش‌آموز → student1 / 1234</p>
+      <p class="hint">راهنما: ایمیل رو وارد کنید (مثلاً hossein.ranjbar@andisheh-school.local)</p>
     </div>
   </div>
 
@@ -363,49 +345,41 @@
     </div>
   </div>
 
-  <!-- ===== اسکریپت‌ها (آخر همه) ===== -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="script.js"></script>
-
-<!-- ===== مودال کارگاه ===== -->
-<div id="workshopModal" class="workshop-modal">
-  <div class="workshop-content">
-    <button class="workshop-close" onclick="closeWorkshop()">&times;</button>
-
-    <!-- بخش Hero کارگاه -->
-    <div class="workshop-hero">
-      <div class="workshop-hero-bg"></div>
-      <div class="workshop-hero-overlay"></div>
-      <div class="workshop-hero-content">
-        <h1 id="workshopTitle">کارگاه کامپیوتر ما</h1>
-        <div class="workshop-arrow-down">↓</div>
+  <!-- ===== مودال کارگاه ===== -->
+  <div id="workshopModal" class="workshop-modal">
+    <div class="workshop-content">
+      <button class="workshop-close" onclick="closeWorkshop()">&times;</button>
+      <div class="workshop-hero">
+        <div class="workshop-hero-bg"></div>
+        <div class="workshop-hero-overlay"></div>
+        <div class="workshop-hero-content">
+          <h1 id="workshopTitle">کارگاه کامپیوتر ما</h1>
+          <div class="workshop-arrow-down">↓</div>
+        </div>
       </div>
-    </div>
-
-    <!-- متن توضیحات -->
-    <div class="workshop-text-section">
-      <p id="workshopText" class="workshop-description"></p>
-    </div>
-
-    <!-- بخش رسانه: ۳ عکس + ویدیو -->
-    <div class="workshop-media">
-      <h2 class="workshop-media-title">گالری تصاویر و ویدیو</h2>
-      <div class="workshop-gallery" id="workshopGallery"></div>
-      <div class="workshop-video-wrapper">
-        <video id="workshopVideo" controls playsinline>
-          <source id="workshopVideoSource" src="" type="video/mp4">
-          مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
-        </video>
+      <div class="workshop-text-section">
+        <p id="workshopText" class="workshop-description"></p>
       </div>
-    </div>
-
-    <!-- پایان -->
-    <div class="workshop-end">
-      <p>پایان گالری</p>
-      <span>✦ ✦ ✦</span>
+      <div class="workshop-media">
+        <h2 class="workshop-media-title">گالری تصاویر و ویدیو</h2>
+        <div class="workshop-gallery" id="workshopGallery"></div>
+        <div class="workshop-video-wrapper">
+          <video id="workshopVideo" controls playsinline>
+            <source id="workshopVideoSource" src="" type="video/mp4">
+            مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
+          </video>
+        </div>
+      </div>
+      <div class="workshop-end">
+        <p>پایان گالری</p>
+        <span>✦ ✦ ✦</span>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- ===== اسکریپت‌ها ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>
