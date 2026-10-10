@@ -11,7 +11,15 @@ const SUPABASE_URL = 'https://xtrufgkrqucukmbwzlvj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0cnVmZ2tycXVjdWttYnd6bHZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0Njc5NTksImV4cCI6MjEwNzA0Mzk1OX0.2UDzlKiurdOasxtGsM4h43sq0_0YJUPq1kSSsr01nj0';
 
 const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,        // ذخیره سشن تو localStorage
+    autoRefreshToken: true,      // تازه‌سازی خودکار توکن
+    detectSessionInUrl: false,   // چک نکن تو URL
+    storage: window.localStorage, // محل ذخیره
+    storageKey: 'andisheh-school-auth', // کلید مخصوص
+  },
+});
 
 let currentUser = null;
 let loginType = 'teacher';
@@ -37,7 +45,7 @@ function closeLogin() {
   document.getElementById('loginPassword').value = '';
 }
 
-// ===== ورود =====
+// ==// ===== ورود =====
 async function doLogin() {
   const email = document.getElementById('loginUsername').value.trim();
   const password = document.getElementById('loginPassword').value;
@@ -55,7 +63,7 @@ async function doLogin() {
 
   if (profileError) { alert('❌ پروفایل یافت نشد!'); return; }
 
-  if (loginType === 'teacher' && profile.role !== 'teacher') {
+  if (loginType === 'teacher' && profile.role !== 'teacher' && profile.role !== 'admin') {
     alert('❌ این حساب معلم نیست!'); await sb.auth.signOut(); return;
   }
   if (loginType === 'student' && profile.role !== 'student') {
@@ -72,23 +80,13 @@ async function doLogin() {
 
 // ===== داشبورد =====
 async function showDashboard() {
-  const loginSection = document.getElementById('login-section');
-  if (loginSection) loginSection.style.display = 'none';
+  document.getElementById('login-section').style.display = 'none';
 
-  if (currentUser.role === 'teacher') {
-    const tp = document.getElementById('teacherPanel');
-    if (tp) tp.style.display = 'block';
-  } else if (currentUser.role === 'admin') {
-    const ap = document.getElementById('adminPanel');
-    if (ap) ap.style.display = 'block';
-    const nameEl = document.getElementById('adminName');
-    if (nameEl) nameEl.textContent = currentUser.full_name || 'مدیر';
-    await loadAdminAnnouncements();
-    await loadAdminStats();
+  if (currentUser.role === 'teacher' || currentUser.role === 'admin') {
+    document.getElementById('teacherPanel').style.display = 'block';
   }
 
-  const as = document.getElementById('assignmentsSection');
-  if (as) as.style.display = 'block';
+  document.getElementById('assignmentsSection').style.display = 'block';
   await loadAssignments();
 }
 
@@ -97,10 +95,9 @@ async function logout() {
   await sb.auth.signOut();
   currentUser = null;
   document.getElementById('teacherPanel').style.display = 'none';
-  const adminPanel = document.getElementById('adminPanel');
-  if (adminPanel) adminPanel.style.display = 'none';
   document.getElementById('assignmentsSection').style.display = 'none';
   document.getElementById('login-section').style.display = 'flex';
+  localStorage.removeItem('andisheh-school-auth');
 }
 
 // ===== ایجاد تکلیف =====
@@ -957,3 +954,64 @@ async function logActivity(action, details = null) {
     console.warn('Log failed:', err);
   }
 }
+
+// ===== چک کردن سشن در بارگذاری صفحه =====
+async function checkSession() {
+  try {
+    // گرفتن سشن فعلی از localStorage
+    const { data: { session }, error } = await sb.auth.getSession();
+    
+    if (error) {
+      console.log('خطا در دریافت سشن:', error);
+      return;
+    }
+    
+    if (session && session.user) {
+      // گرفتن پروفایل کاربر از دیتابیس
+      const { data: profile, error: profileError } = await sb
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (profile && !profileError) {
+        currentUser = { email: session.user.email, ...profile };
+        showDashboard();
+      }
+    }
+  } catch (err) {
+    console.log('خطا:', err);
+  }
+}
+
+// اجرا در بارگذاری صفحه
+checkSession();
+// ===== چک کردن سشن در بارگذاری صفحه =====
+async function checkSession() {
+  try {
+    const { data: { session }, error } = await sb.auth.getSession();
+    
+    if (error) {
+      console.log('خطا در دریافت سشن:', error);
+      return;
+    }
+    
+    if (session && session.user) {
+      const { data: profile, error: profileError } = await sb
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (profile && !profileError) {
+        currentUser = { email: session.user.email, ...profile };
+        showDashboard();
+      }
+    }
+  } catch (err) {
+    console.log('خطا:', err);
+  }
+}
+
+// اجرا در بارگذاری صفحه
+checkSession();
